@@ -5,7 +5,8 @@ import time
 import numpy
 import random
 
-iterations = 500
+iterations = 1000
+targetAngles = [0]*iterations
 physicsClient = p.connect(p.GUI)
 p.setAdditionalSearchPath(pybullet_data.getDataPath())
 p.setGravity(0,0,-9.8)
@@ -15,6 +16,9 @@ p.loadSDF("world.sdf")
 pyrosim.Prepare_To_Simulate(robotId)
 backLegSensorValues = numpy.zeros(iterations)
 frontLegSensorValues = numpy.zeros(iterations)
+x = numpy.linspace(0,2*numpy.pi,iterations)
+for a in range(iterations):
+    targetAngles[a] = numpy.sin(x[a]) * (numpy.pi/4)
 for i in range(iterations):
     time.sleep(1/60)
     p.stepSimulation()
