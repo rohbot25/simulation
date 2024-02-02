@@ -17,9 +17,11 @@ class SIMULATION:
 
     def Run(self):
         for i in range(c.iterations):
+            #print(i)
             time.sleep(c.sleepy)
             p.stepSimulation()
             self.robot.Sense(i)
+            self.robot.Think(i)
             self.robot.Act(i)
     def __del__(self):
         p.disconnect()
