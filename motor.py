@@ -9,7 +9,7 @@ class MOTOR:
         self.motorValues = numpy.zeros(c.iterations)
             
     def Set_Value(self,desiredAngle,robotId):
-        pass
+        print("set_value",desiredAngle)
         pyrosim.Set_Motor_For_Joint(
             bodyIndex = robotId,
             jointName = self.jointName,
