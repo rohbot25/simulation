@@ -26,3 +26,6 @@ class SIMULATION:
     def __del__(self):
         p.disconnect()
 
+    def Get_Fitness(self):
+        self.robot.Get_Fitness()
+

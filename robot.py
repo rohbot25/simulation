@@ -33,6 +33,8 @@ class ROBOT:
     def Think(self,t):
         self.nn.Update()
         self.nn.Print()
+    def Get_Fitness(self):
+        pass
         
 
         
