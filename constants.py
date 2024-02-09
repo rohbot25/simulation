@@ -14,3 +14,4 @@ height = 1
 x = -1
 y = 0.5
 z = 1
+numberOfGenerations = 10
