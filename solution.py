@@ -4,20 +4,18 @@ import pybullet as p
 import pyrosim.pyrosim as pyrosim
 import os
 import random
+import time
 
 class SOLUTION:
-    def __init__(self):
+    def __init__(self,nextAvailableID):
+        self.myID = nextAvailableID
         self.weights = numpy.random.rand(3,2)
         self.weights = self.weights * 2 -1
         
     def Evaluate(self,directOrGUI):
-        self.Create_World()
-        self.Create_Body()
-        self.Create_Brain()
-        os.system("python3 simulate.py " + str(directOrGUI))
-        f = open("data/fitness.txt",'r')
-        self.fitness = float(f.read())
-        f.close()
+        self.Start_Simulation(directOrGUI)
+
+        self.Wait_For_Simulation_To_End()
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -35,7 +33,7 @@ class SOLUTION:
         pyrosim.End()
 
     def Create_Brain(self):
-        pyrosim.Start_NeuralNetwork("brain.nndf")
+        pyrosim.Start_NeuralNetwork("brain"+str(self.myID)+".nndf")
         pyrosim.Send_Sensor_Neuron(name = 0, linkName = "Torso")
         pyrosim.Send_Sensor_Neuron(name = 1, linkName = "BackLeg")
         pyrosim.Send_Sensor_Neuron(name = 2, linkName = "FrontLeg")
@@ -51,4 +49,26 @@ class SOLUTION:
         randomRow = random.randint(0,2)
         randomCol = random.randint(0,1)
         self.weights[randomRow][randomCol] = random.random() * 2 - 1
+
+    def Set_ID(self,ID):
+        self.myID = ID
+
+    def Start_Simulation(self,directOrGUI):
+        self.Create_World()
+        self.Create_Body()
+        self.Create_Brain()
+        os.system("python3 simulate.py " + str(directOrGUI) +" "+str(self.myID)+ " &")
+
+    def Wait_For_Simulation_To_End(self):
+        fitnessFileName = "data/fitness"+str(self.myID)+".txt"
+        while not os.path.exists(fitnessFileName):
+            time.sleep(.01)
+        f = open(fitnessFileName,'r')
+        self.fitness = float(f.read())
+        f.close()
+        os.system("rm "+fitnessFileName)
+        #print(self.fitness)
+        
+        
+        
         
