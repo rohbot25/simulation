@@ -18,7 +18,6 @@ class SIMULATION:
         self.world = WORLD()
         self.robot = ROBOT(solutionID)
         
-
     def Run(self):
         for i in range(c.iterations):
             #print(i)
