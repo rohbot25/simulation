@@ -6,7 +6,7 @@ import os
 class PARALLEL_HILL_CLIMBER:
     def __init__(self):
         os.system("rm brain*.nndf")
-        os.system("rm fitness*.txt")
+        os.system("rm data/fitness*.txt")
         self.parents = {}
         self.nextAvailableID = 0
         for i in range(c.populationSize):
@@ -53,7 +53,6 @@ class PARALLEL_HILL_CLIMBER:
         for keys in self.parents:
             if self.parents[keys].fitness < parent.fitness:
                 parent = self.parents[keys]
-        print(parent.fitness)
         parent.Start_Simulation("GUI")
 
     def Evaluate(self,solutions):
