@@ -37,13 +37,16 @@ class ROBOT:
         self.nn.Update()
         #self.nn.Print()
     def Get_Fitness(self):
-        basePositionAndOrientation = p.getBasePositionAndOrientation(self.robot)
+        basePositionAndOrientation = p.getBasePositionAndOrientation(self.robotId)
+        print(basePositionAndOrientation)
         basePosition = basePositionAndOrientation[0]
-        xPosition = basePosition[0]
+        print(basePosition)
+        zPosition = basePosition[2]
+        print(zPosition)
         tempFile = "data/tmp"+str(self.myID)+".txt"
         fitnessFile = "data/fitness"+str(self.myID)+".txt"
         f = open(tempFile,'w')
-        f.write(str(xPosition))
+        f.write(str(zPosition))
         f.close()
         os.system("mv "+tempFile+" "+fitnessFile)
         
