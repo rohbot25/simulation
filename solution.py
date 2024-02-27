@@ -10,7 +10,7 @@ class SOLUTION:
     def __init__(self,nextAvailableID):
         self.myID = nextAvailableID
         self.weights = numpy.random.rand(c.numSensorNeurons,c.numMotorNeurons)
-        self.weights = self.weights
+        self.weights = self.weights * 0
         
 
     def Create_World(self):
@@ -34,19 +34,19 @@ class SOLUTION:
 ##        pyrosim.Send_Cube(name="RightForearm", pos=[] , size = [])
 
 
-        pyrosim.Send_Cube(name="RightFoot", pos=[0,0,0.1] , size = [0.5,.4,.2])
+        pyrosim.Send_Cube(name="RightFoot", pos=[0,0,0.1] , size = [.75,.4,.2])
         pyrosim.Send_Joint( name = "RightFoot_RightTibia", parent = "RightFoot", child = "RightTibia", type = "revolute", position = [0,0,0.1],jointAxis = "0 1 0")
         pyrosim.Send_Cube(name="RightTibia", pos=[0,0,.5*c.size] , size = [.2,.2,1*c.size])
         pyrosim.Send_Joint( name = "RightTibia_RightFemur", parent = "RightTibia", child = "RightFemur", type = "revolute", position = [0,0,1*c.size],jointAxis = "0 1 0")
         pyrosim.Send_Cube(name="RightFemur", pos=[0,0,.5*c.size] , size = [.2,.3,1*c.size])
         pyrosim.Send_Joint( name = "RightFemur_Hip", parent = "RightFemur", child = "Hip", type = "revolute", position = [0,0,1*c.size],jointAxis = "0 1 0")
-        pyrosim.Send_Cube(name="Hip", pos=[0,-0.5/2,0] , size = [.2,1/2,.2])
-        pyrosim.Send_Joint(name = "Hip_LeftFemur", parent = "Hip", child = "LeftFemur", type = "revolute", position = [0,-1/2,0],jointAxis = "0 1 0")
+        pyrosim.Send_Cube(name="Hip", pos=[0,-0.5,0] , size = [.2,1,.2])
+        pyrosim.Send_Joint(name = "Hip_LeftFemur", parent = "Hip", child = "LeftFemur", type = "revolute", position = [0,-1,0],jointAxis = "0 -1 0")
         pyrosim.Send_Cube(name="LeftFemur", pos=[0,0,-0.5*c.size] , size = [.2,.3,1*c.size])
-        pyrosim.Send_Joint( name = "LeftFemur_LeftTibia", parent = "LeftFemur", child = "LeftTibia", type = "revolute", position = [0,0,-1*c.size],jointAxis = "0 1 0")
+        pyrosim.Send_Joint( name = "LeftFemur_LeftTibia", parent = "LeftFemur", child = "LeftTibia", type = "revolute", position = [0,0,-1*c.size],jointAxis = "0 -1 0")
         pyrosim.Send_Cube(name="LeftTibia", pos=[0,0,-0.5*c.size] , size = [.2,.2,1*c.size])
-        pyrosim.Send_Joint( name = "LeftTibia_LeftFoot", parent = "LeftTibia", child = "LeftFoot", type = "revolute", position = [0,0,-1*c.size+0.1],jointAxis = "0 1 0")
-        pyrosim.Send_Cube(name="LeftFoot", pos=[0,0,-0.1] , size = [0.5,.4,.2])
+        pyrosim.Send_Joint( name = "LeftTibia_LeftFoot", parent = "LeftTibia", child = "LeftFoot", type = "revolute", position = [0,0,-1*c.size+0.1],jointAxis = "0 -1 0")
+        pyrosim.Send_Cube(name="LeftFoot", pos=[0,0,-0.1] , size = [.75,.4,.2])
         
         #pyrosim.Send_Cube(name="Torso", pos=[] , size = [])
         #pyrosim.Send_Joint( name = "Torso_Hip", parent = "Torso", child = "Hip", type = "revolute", position = [0,-0.5,1],jointAxis = "1 0 0")
@@ -67,7 +67,7 @@ class SOLUTION:
         pyrosim.Send_Sensor_Neuron(name = 4, linkName = "LeftFemur")
         pyrosim.Send_Sensor_Neuron(name = 5, linkName = "LeftTibia")
         pyrosim.Send_Sensor_Neuron(name = 6, linkName = "LeftFoot")
-        pyrosim.Send_Motor_Neuron(name = 2, jointName = "RightFoot_RightTibia")
+        pyrosim.Send_Motor_Neuron(name = 7, jointName = "RightFoot_RightTibia")
         pyrosim.Send_Motor_Neuron(name = 8, jointName = "RightTibia_RightFemur")
         pyrosim.Send_Motor_Neuron(name = 9, jointName = "RightFemur_Hip")
         pyrosim.Send_Motor_Neuron(name = 10, jointName = "Hip_LeftFemur")
@@ -75,10 +75,10 @@ class SOLUTION:
         pyrosim.Send_Motor_Neuron(name = 12, jointName = "LeftTibia_LeftFoot")
         
         
-        for currentRow in range(c.numSensorNeurons):
+        for currentRow in range(c.numSensorNeurons-4):
             for currentColumn in range(c.numMotorNeurons):
                 pyrosim.Send_Synapse( sourceNeuronName = currentRow , targetNeuronName = currentColumn+c.numSensorNeurons , weight = self.weights[currentRow][currentColumn])
-    
+
         pyrosim.End()
         
     def Mutate(self):

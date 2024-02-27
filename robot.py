@@ -5,6 +5,7 @@ import constants as c
 from sensor import SENSOR
 from motor import MOTOR
 import os
+import numpy
 
 class ROBOT:
     def __init__(self,solutionID):
@@ -33,7 +34,13 @@ class ROBOT:
             if(self.nn.Is_Motor_Neuron(neuronName)):
                 jointName = self.nn.Get_Motor_Neurons_Joint(neuronName)
                 desiredAngle = self.nn.Get_Value_Of(neuronName)
-                self.motors[jointName].Set_Value(desiredAngle*c.motorJointRange,self.robotId)
+                if(neuronName == '9' or neuronName == '10'):
+                    desiredAngle *=-1
+                elif(neuronName == '8' or neuronName == '11'):
+                    desiredAngle *= numpy.pi/4
+                elif(neuronName == '7' or neuronName == '12'):
+                    desiredAngle *= .25
+                self.motors[jointName].Set_Value(desiredAngle,self.robotId)
     def Think(self,t):
         self.nn.Update()
         #self.nn.Print()
@@ -43,7 +50,7 @@ class ROBOT:
 ##        xPosition = linkPosition[0]
 ##        zPosition = linkPosition[2]
 ##        fitness = xPosition + zPosition/0.75
-        fitness = sum(self.fitnessNum)
+        fitness = sum(self.fitnessNum)/c.iterations
         tempFile = "data/tmp"+str(self.myID)+".txt"
         fitnessFile = "data/fitness"+str(self.myID)+".txt"
         f = open(tempFile,'w')
@@ -56,7 +63,7 @@ class ROBOT:
         linkPosition = stateOfLinkZero[0]
         xPosition = linkPosition[0]
         zPosition = linkPosition[2]
-        self.fitnessNum.append(zPosition)
+        self.fitnessNum.append(xPosition + 3 * zPosition)
         
 
         
