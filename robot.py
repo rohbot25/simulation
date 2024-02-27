@@ -12,6 +12,7 @@ class ROBOT:
         self.robotId = p.loadURDF("body.urdf")
         self.nn = NEURAL_NETWORK("brain"+str(solutionID)+".nndf")
         os.system("rm brain"+str(self.myID)+".nndf")
+        self.fitnessNum = []
         pyrosim.Prepare_To_Simulate(self.robotId)
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
@@ -37,15 +38,25 @@ class ROBOT:
         self.nn.Update()
         #self.nn.Print()
     def Get_Fitness(self):
-        stateOfLinkZero = p.getLinkState(self.robotId,0)
-        positionOfLinkZero = stateOfLinkZero[0]
-        xCoordinateOfLinkZero = positionOfLinkZero[0]
+##        stateOfLinkZero = p.getLinkState(self.robotId,3)
+##        linkPosition = stateOfLinkZero[0]
+##        xPosition = linkPosition[0]
+##        zPosition = linkPosition[2]
+##        fitness = xPosition + zPosition/0.75
+        fitness = sum(self.fitnessNum)
         tempFile = "data/tmp"+str(self.myID)+".txt"
         fitnessFile = "data/fitness"+str(self.myID)+".txt"
         f = open(tempFile,'w')
-        f.write(str(xCoordinateOfLinkZero))
+        f.write(str(fitness))
         f.close()
         os.system("mv "+tempFile+" "+fitnessFile)
+
+    def Add_Fitness(self):
+        stateOfLinkZero = p.getLinkState(self.robotId,3)
+        linkPosition = stateOfLinkZero[0]
+        xPosition = linkPosition[0]
+        zPosition = linkPosition[2]
+        self.fitnessNum.append(zPosition)
         
 
         
