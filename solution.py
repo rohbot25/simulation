@@ -11,7 +11,6 @@ class SOLUTION:
         self.myID = nextAvailableID
         self.weights = numpy.random.rand(c.numSensorNeurons,c.numMotorNeurons)
         self.weights = self.weights * 0
-        
 
     def Create_World(self):
         pyrosim.Start_SDF("world.sdf")
@@ -34,19 +33,19 @@ class SOLUTION:
 ##        pyrosim.Send_Cube(name="RightForearm", pos=[] , size = [])
 
 
-        pyrosim.Send_Cube(name="RightFoot", pos=[0,0,0.1] , size = [.75,.4,.2])
+        pyrosim.Send_Cube(name="RightFoot", pos=[0,0,0.1] , size = [.25,.2,.2])
         pyrosim.Send_Joint( name = "RightFoot_RightTibia", parent = "RightFoot", child = "RightTibia", type = "revolute", position = [0,0,0.1],jointAxis = "0 1 0")
         pyrosim.Send_Cube(name="RightTibia", pos=[0,0,.5*c.size] , size = [.2,.2,1*c.size])
         pyrosim.Send_Joint( name = "RightTibia_RightFemur", parent = "RightTibia", child = "RightFemur", type = "revolute", position = [0,0,1*c.size],jointAxis = "0 1 0")
-        pyrosim.Send_Cube(name="RightFemur", pos=[0,0,.5*c.size] , size = [.2,.3,1*c.size])
+        pyrosim.Send_Cube(name="RightFemur", pos=[0,0,.5*c.size] , size = [.2,.2,1*c.size])
         pyrosim.Send_Joint( name = "RightFemur_Hip", parent = "RightFemur", child = "Hip", type = "revolute", position = [0,0,1*c.size],jointAxis = "0 1 0")
-        pyrosim.Send_Cube(name="Hip", pos=[0,-0.5,0] , size = [.2,1,.2])
-        pyrosim.Send_Joint(name = "Hip_LeftFemur", parent = "Hip", child = "LeftFemur", type = "revolute", position = [0,-1,0],jointAxis = "0 -1 0")
-        pyrosim.Send_Cube(name="LeftFemur", pos=[0,0,-0.5*c.size] , size = [.2,.3,1*c.size])
+        pyrosim.Send_Cube(name="Hip", pos=[0,-0.25,0] , size = [.2,.5,.2])
+        pyrosim.Send_Joint(name = "Hip_LeftFemur", parent = "Hip", child = "LeftFemur", type = "revolute", position = [0,-0.5,0],jointAxis = "0 -1 0")
+        pyrosim.Send_Cube(name="LeftFemur", pos=[0,0,-0.5*c.size] , size = [.2,.2,1*c.size])
         pyrosim.Send_Joint( name = "LeftFemur_LeftTibia", parent = "LeftFemur", child = "LeftTibia", type = "revolute", position = [0,0,-1*c.size],jointAxis = "0 -1 0")
         pyrosim.Send_Cube(name="LeftTibia", pos=[0,0,-0.5*c.size] , size = [.2,.2,1*c.size])
         pyrosim.Send_Joint( name = "LeftTibia_LeftFoot", parent = "LeftTibia", child = "LeftFoot", type = "revolute", position = [0,0,-1*c.size+0.1],jointAxis = "0 -1 0")
-        pyrosim.Send_Cube(name="LeftFoot", pos=[0,0,-0.1] , size = [.75,.4,.2])
+        pyrosim.Send_Cube(name="LeftFoot", pos=[0,0,-0.1] , size = [.25,.2,.2])
         
         #pyrosim.Send_Cube(name="Torso", pos=[] , size = [])
         #pyrosim.Send_Joint( name = "Torso_Hip", parent = "Torso", child = "Hip", type = "revolute", position = [0,-0.5,1],jointAxis = "1 0 0")
@@ -75,7 +74,7 @@ class SOLUTION:
         pyrosim.Send_Motor_Neuron(name = 12, jointName = "LeftTibia_LeftFoot")
         
         
-        for currentRow in range(c.numSensorNeurons-4):
+        for currentRow in range(c.numSensorNeurons):
             for currentColumn in range(c.numMotorNeurons):
                 pyrosim.Send_Synapse( sourceNeuronName = currentRow , targetNeuronName = currentColumn+c.numSensorNeurons , weight = self.weights[currentRow][currentColumn])
 
@@ -85,6 +84,7 @@ class SOLUTION:
         randomRow = random.randint(0,c.numSensorNeurons-1)
         randomCol = random.randint(0,c.numMotorNeurons-1)
         self.weights[randomRow][randomCol] = random.random()
+
 
     def Set_ID(self,ID):
         self.myID = ID

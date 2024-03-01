@@ -27,7 +27,7 @@ class SIMULATION:
             self.robot.Sense(i)
             self.robot.Think(i)
             self.robot.Act(i)
-            self.robot.Add_Fitness()
+            #self.robot.Add_Fitness()
     def __del__(self):
         p.disconnect()
 

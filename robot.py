@@ -13,7 +13,7 @@ class ROBOT:
         self.robotId = p.loadURDF("body.urdf")
         self.nn = NEURAL_NETWORK("brain"+str(solutionID)+".nndf")
         os.system("rm brain"+str(self.myID)+".nndf")
-        self.fitnessNum = []
+        self.fitnessNums = []
         pyrosim.Prepare_To_Simulate(self.robotId)
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
@@ -30,27 +30,42 @@ class ROBOT:
         for jointName in pyrosim.jointNamesToIndices:
             self.motors[jointName.decode('ASCII')] = MOTOR(jointName)
     def Act(self,desiredAngle):
+        act = []
         for neuronName in self.nn.Get_Neuron_Names():
             if(self.nn.Is_Motor_Neuron(neuronName)):
                 jointName = self.nn.Get_Motor_Neurons_Joint(neuronName)
                 desiredAngle = self.nn.Get_Value_Of(neuronName)
-                if(neuronName == '9' or neuronName == '10'):
-                    desiredAngle *=-1
-                elif(neuronName == '8' or neuronName == '11'):
-                    desiredAngle *= numpy.pi/4
-                elif(neuronName == '7' or neuronName == '12'):
-                    desiredAngle *= .25
+                act.append(desiredAngle)
                 self.motors[jointName].Set_Value(desiredAngle,self.robotId)
+        self.fitnessNums.append(act)      
     def Think(self,t):
         self.nn.Update()
         #self.nn.Print()
     def Get_Fitness(self):
-##        stateOfLinkZero = p.getLinkState(self.robotId,3)
-##        linkPosition = stateOfLinkZero[0]
-##        xPosition = linkPosition[0]
-##        zPosition = linkPosition[2]
-##        fitness = xPosition + zPosition/0.75
-        fitness = sum(self.fitnessNum)/c.iterations
+        stateOfLinkZero = p.getLinkState(self.robotId,3)
+        linkPosition = stateOfLinkZero[0]
+        xPosition = linkPosition[0]
+        zPosition = linkPosition[2]
+        velocity = []
+        acceleration = []
+        #print("fitness: " + str(self.fitnessNums))
+        for i in range(len(self.fitnessNums)-1):
+            vel = []
+            for a in range(len(self.fitnessNums[i])):
+                vel.append(self.fitnessNums[i+1][a] - self.fitnessNums[i][a])
+            velocity.append(vel)
+        #print("Velocity: " + str(velocity))
+        for i in range(len(velocity)-1):
+            acc = []
+            for a in range(len(velocity[i])):
+                acc.append(abs(velocity[i+1][a] - velocity[i][a]))
+            acceleration.append(acc)
+        a = 0
+        for lists in acceleration:
+           a += sum(lists) 
+        #print("Acceleration " + str(acceleration))
+        fitness = xPosition * zPosition * 1/(1+a)
+        #fitness = sum(self.fitnessNum)/c.iterations
         tempFile = "data/tmp"+str(self.myID)+".txt"
         fitnessFile = "data/fitness"+str(self.myID)+".txt"
         f = open(tempFile,'w')
@@ -58,12 +73,7 @@ class ROBOT:
         f.close()
         os.system("mv "+tempFile+" "+fitnessFile)
 
-    def Add_Fitness(self):
-        stateOfLinkZero = p.getLinkState(self.robotId,3)
-        linkPosition = stateOfLinkZero[0]
-        xPosition = linkPosition[0]
-        zPosition = linkPosition[2]
-        self.fitnessNum.append(xPosition + 3 * zPosition)
+        
         
 
         
