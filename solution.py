@@ -89,19 +89,26 @@ class SOLUTION:
     def Set_ID(self,ID):
         self.myID = ID
 
-    def Start_Simulation(self,directOrGUI):
+    def Start_Simulation(self,directOrGUI,i):
         self.Create_World()
         self.Create_Body()
         self.Create_Brain()
-        os.system("python3 simulate.py " + str(directOrGUI) +" "+str(self.myID)+ " &")
+        os.system("python3 simulate.py " + str(directOrGUI) +" "+str(self.myID)+ " " + str(i) + " &")
 
     def Wait_For_Simulation_To_End(self):
         fitnessFileName = "data/fitness"+str(self.myID)+".txt"
+        xFile = "data/x"+str(self.myID)+".txt"
         while not os.path.exists(fitnessFileName):
             time.sleep(.01)
+        while not os.path.exists(xFile):
+            time.sleep(.01)
         f = open(fitnessFileName,'r')
+        x = open(xFile,'r')
         self.fitness = float(f.read())
+        self.x = float(x.read())
         f.close()
+        x.close()
+        os.system("rm "+xFile)
         os.system("rm "+fitnessFileName)
         
         

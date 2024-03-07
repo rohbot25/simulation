@@ -17,10 +17,11 @@ legHeight = .2
 x = -2
 y = 2
 z = .5
-numberOfGenerations = 50
-populationSize = 50
+numberOfGenerations = 100
+populationSize = 25
 numSensorNeurons = 7
 numMotorNeurons = 6
 motorJointRange = 1
 size = .5
+ab = 8
 
