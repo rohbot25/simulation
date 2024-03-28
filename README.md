@@ -1,2 +1,0 @@
-# simulation
-evolutionary robotics
